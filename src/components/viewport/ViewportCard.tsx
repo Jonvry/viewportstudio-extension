@@ -155,7 +155,13 @@ export const ViewportCard = memo(function ViewportCard({
       onKeyDown={selectCardFromKeyboard}
       tabIndex={0}
       aria-current={selected ? "true" : undefined}
-      aria-label={`${viewport.name} viewport${selected ? ", selected" : ""}`}
+      aria-label={`${viewport.name} ${viewport.category} viewport, ${viewport.width} by ${viewport.height} CSS pixels, ${viewport.width === viewport.height ? "square" : viewport.width > viewport.height ? "landscape" : "portrait"}${selected ? ", selected" : ""}`}
+      data-viewport-category={viewport.category}
+      data-viewport-width={viewport.width}
+      data-viewport-height={viewport.height}
+      data-viewport-orientation={
+        viewport.width === viewport.height ? "square" : viewport.width > viewport.height ? "landscape" : "portrait"
+      }
     >
       <ViewportCardHeader
         viewport={viewport}
