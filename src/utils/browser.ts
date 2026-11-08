@@ -6,6 +6,16 @@ export function errorText(error: unknown) {
 }
 
 export async function openExternal(url: string) {
-  if (isExtension()) await chrome.tabs.create({ url })
-  else window.open(url, "_blank", "noopener,noreferrer")
+  if (!isExtension()) {
+    window.open(url, "_blank", "noopener,noreferrer")
+    return
+  }
+
+  // Content scripts have a runtime ID but do not expose chrome.tabs.
+  if (chrome.tabs?.create) {
+    await chrome.tabs.create({ url })
+    return
+  }
+
+  await chrome.runtime.sendMessage({ type: "viewportstudio:open-external", url })
 }

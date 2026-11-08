@@ -22,6 +22,7 @@ export type Interaction =
   | { kind: "input"; selector: string; value: string; selectionStart: number | null; selectionEnd: number | null }
 export type UIMessage = { type: "configure"; tabId?: number; ids: string[]; sync: SyncSettings }
 export type ExtensionRuntimeMessage =
+  | { type: "viewportstudio:open-external"; url: string }
   | { type: "viewportstudio:set-frame-policy"; tabId?: number; enabled: boolean }
   | { type: "viewportstudio:navigate-tab"; url: string; replace: boolean }
   | { type: "viewportstudio:overlay-state" }
