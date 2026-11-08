@@ -177,6 +177,21 @@ chrome.runtime.onMessage.addListener((message: ExtensionRuntimeMessage, sender, 
       .catch((error: unknown) => respond({ error: error instanceof Error ? error.message : String(error) }))
     return true
   }
+  if (message?.type === "viewportstudio:open-external") {
+    void (async () => {
+      await initialization
+      const authorizedSender =
+        isWorkspaceURL(sender.url) ||
+        (sender.tab?.id !== undefined && sender.frameId === 0 && overlayTabs.has(sender.tab.id))
+      if (!authorizedSender || !validURL(message.url)) {
+        respond({ error: "This link cannot be opened from the current context." })
+        return
+      }
+      await chrome.tabs.create({ url: message.url })
+      respond({ opened: true })
+    })().catch((error: unknown) => respond({ error: error instanceof Error ? error.message : String(error) }))
+    return true
+  }
   const authorizedOverlay = senderTabId !== undefined && sender.frameId === 0 && sessions.has(senderTabId)
   const authorizedWorkspace = isWorkspaceURL(sender.url)
   if (!authorizedWorkspace && !authorizedOverlay) {
