@@ -24,6 +24,7 @@ export const ViewportFrame = memo(function ViewportFrame({
     (url: string) => (useOverlayBridge ? getOverlayPreviewURL(url, v.id, chrome.runtime.getURL("")) : url),
     [useOverlayBridge, v.id]
   )
+  const orientation = v.width === v.height ? "square" : v.width > v.height ? "landscape" : "portrait"
   useEffect(() => {
     if (!v.url || !previewReady || requestedURL.current === v.url) return
     requestedURL.current = v.url
@@ -123,7 +124,7 @@ export const ViewportFrame = memo(function ViewportFrame({
     <iframe
       key={hasURL ? "website" : "sample"}
       ref={frame}
-      title={`${v.name} preview`}
+      title={`${v.name} ${v.category} ${v.width} by ${v.height} CSS pixels, ${orientation} preview`}
       data-preview-source={hasURL ? "website" : "sample"}
       name={useOverlayBridge ? `${v.id}-bridge` : v.id}
       src={hasURL && previewReady && initialURL ? previewSource(initialURL) : undefined}
